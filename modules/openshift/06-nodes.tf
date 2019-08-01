@@ -105,6 +105,11 @@ resource "aws_instance" "node1" {
     volume_size = 80
     volume_type = "gp2"
   }
+  ebs_block_device {
+    device_name = "/dev/xvdb"
+    volume_size = 20
+    volume_type = "gp2"
+  }
 
   key_name = "${aws_key_pair.keypair.key_name}"
 
@@ -141,6 +146,11 @@ resource "aws_instance" "node2" {
   ebs_block_device {
     device_name = "/dev/sdf"
     volume_size = 80
+    volume_type = "gp2"
+  }
+  ebs_block_device {
+    device_name = "/dev/xvdb"
+    volume_size = 20
     volume_type = "gp2"
   }
 
