@@ -38,3 +38,15 @@ http://blog.andyserver.com/2018/10/enabling-the-openshift-cluster-console-in-min
 oc login -u system:admin
 oc adm policy add-cluster-role-to-user cluster-admin admin
 oc adm policy add-cluster-role-to-user cluster-monitoring-view admin
+
+- switching over PVC storage persistance GP2.
+https://docs.openshift.com/container-platform/3.11/install_config/registry/deploy_registry_existing_clusters.html#registry-production-use
+https://docs.openshift.com/container-platform/3.11/install_config/persistent_storage/index.html#install-config-persistent-storage-index
+
+$ oc get pvc
+NAME               STATUS    VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+registry-storage   Bound     pvc-65f934cf-b359-11e9-8849-026f8b0bbf30   20Gi       RWO            gp2            5d
+
+oc set volume deploymentconfigs/docker-registry --add \
+   --name=registry-storage -t pvc \
+   --claim-name=registry-storage --overwrite
