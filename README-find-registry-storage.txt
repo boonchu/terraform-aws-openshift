@@ -19,7 +19,9 @@ $ awless list volumes --filter name="kubernetes-dynamic-pvc-"
 | vol-0d8b96695ae736ecf | kubernetes-dynamic-pvc-65f934cf- | gp2  | available | 20G  | false     | 6 days   | ap-southeast-1a |
 |                       | b359-11e9-8849-026f8b0bbf30      |      |           |      |           |          |                 |
 
-$ tf-ebs-attach show i-00c4b68eb7da129b0  kubernetes-dynamic-pvc-8b08b22f-b828-11e9-bf58-02222844b110 vol-09218975b196497cc registry-storage /dev/xvdcp | jq -r .
+$ tf-ebs-attach show i-00c4b68eb7da129b0  \
+   kubernetes-dynamic-pvc-8b08b22f-b828-11e9-bf58-02222844b110 \
+   vol-09218975b196497cc registry-storage /dev/xvdcp | jq -r .
 {
   "aws_volume_attachment.registry-storage": {
     "type": "aws_volume_attachment",

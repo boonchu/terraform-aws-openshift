@@ -27,6 +27,10 @@ resource "aws_instance" "master" {
   iam_instance_profile = "${aws_iam_instance_profile.openshift-instance-profile.id}"
   user_data            = "${data.template_file.setup-master.rendered}"
 
+  lifecycle {
+    prevent_destroy = true
+  }
+
   vpc_security_group_ids = [
     "${aws_security_group.openshift-vpc.id}",
     "${aws_security_group.openshift-public-ingress.id}",
@@ -86,29 +90,30 @@ resource "aws_instance" "node1" {
   iam_instance_profile = "${aws_iam_instance_profile.openshift-instance-profile.id}"
   user_data            = "${data.template_file.setup-node.rendered}"
 
+  lifecycle {
+    prevent_destroy = true
+  }
+
   vpc_security_group_ids = [
     "${aws_security_group.openshift-vpc.id}",
     "${aws_security_group.openshift-public-ingress.id}",
     "${aws_security_group.openshift-public-egress.id}",
   ]
 
-  //  We need at least 30GB for OpenShift, let's be greedy...
-  root_block_device {
-    volume_size = 50
-    volume_type = "gp2"
+  ebs_block_device {
+      delete_on_termination = true
+      device_name           = "/dev/sdf"
+      encrypted             = false
+      iops                  = 240
+      volume_size           = 80
+      volume_type           = "gp2"
   }
 
-  # Storage for Docker, see:
-  # https://docs.openshift.org/latest/install_config/install/host_preparation.html#configuring-docker-storage
-  ebs_block_device {
-    device_name = "/dev/sdf"
-    volume_size = 80
-    volume_type = "gp2"
-  }
-  ebs_block_device {
-    device_name = "/dev/xvdb"
-    volume_size = 20
-    volume_type = "gp2"
+  root_block_device {
+      delete_on_termination = true
+      iops                  = 150
+      volume_size           = 50
+      volume_type           = "gp2"
   }
 
   key_name = "${aws_key_pair.keypair.key_name}"
@@ -129,29 +134,53 @@ resource "aws_instance" "node2" {
   iam_instance_profile = "${aws_iam_instance_profile.openshift-instance-profile.id}"
   user_data            = "${data.template_file.setup-node.rendered}"
 
+  lifecycle {
+    prevent_destroy = true
+  }
+
   vpc_security_group_ids = [
     "${aws_security_group.openshift-vpc.id}",
     "${aws_security_group.openshift-public-ingress.id}",
     "${aws_security_group.openshift-public-egress.id}",
   ]
 
-  //  We need at least 30GB for OpenShift, let's be greedy...
+  ebs_block_device {
+      delete_on_termination = false
+      device_name           = "/dev/xvdbf"
+      encrypted             = false
+      iops                  = 100
+      volume_size           = 1
+      volume_type           = "gp2"
+  }
+  ebs_block_device {
+      delete_on_termination = false
+      device_name           = "/dev/xvdbw"
+      encrypted             = false
+      iops                  = 100
+      volume_size           = 1
+      volume_type           = "gp2"
+  }
+  ebs_block_device {
+      delete_on_termination = false
+      device_name           = "/dev/xvdcv"
+      encrypted             = false
+      iops                  = 100
+      volume_size           = 1
+      volume_type           = "gp2"
+  }
+  ebs_block_device {
+      delete_on_termination = true
+      device_name           = "/dev/sdf"
+      encrypted             = false
+      iops                  = 240
+      volume_size           = 80
+      volume_type           = "gp2"
+  }
   root_block_device {
-    volume_size = 50
-    volume_type = "gp2"
-  }
-
-  # Storage for Docker, see:
-  # https://docs.openshift.org/latest/install_config/install/host_preparation.html#configuring-docker-storage
-  ebs_block_device {
-    device_name = "/dev/sdf"
-    volume_size = 80
-    volume_type = "gp2"
-  }
-  ebs_block_device {
-    device_name = "/dev/xvdb"
-    volume_size = 20
-    volume_type = "gp2"
+      delete_on_termination = true
+      iops                  = 150
+      volume_size           = 50
+      volume_type           = "gp2"
   }
 
   key_name = "${aws_key_pair.keypair.key_name}"
