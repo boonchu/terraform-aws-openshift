@@ -42,3 +42,12 @@ resource "aws_route53_record" "node2-a-record" {
         "${aws_instance.node2.private_ip}"
     ]
 }
+resource "aws_route53_record" "node3-a-record" {
+    zone_id = "${aws_route53_zone.internal.zone_id}"
+    name = "node3.openshift.local"
+    type = "A"
+    ttl  = 300
+    records = [
+        "${aws_instance.node3.private_ip}"
+    ]
+}
