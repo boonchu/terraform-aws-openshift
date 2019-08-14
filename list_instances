@@ -1,0 +1,1 @@
+awless list instances --tag Project=openshift

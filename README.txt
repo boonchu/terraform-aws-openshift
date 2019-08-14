@@ -33,6 +33,7 @@ $ awless list records
 cat ./scripts/postinstall-master.sh | ssh -A ec2-user@$(terraform output bastion-public_ip) ssh master.openshift.local
 cat ./scripts/postinstall-node.sh | ssh -A ec2-user@$(terraform output bastion-public_ip) ssh node1.openshift.local
 cat ./scripts/postinstall-node.sh | ssh -A ec2-user@$(terraform output bastion-public_ip) ssh node2.openshift.local
+cat ./scripts/postinstall-node.sh | ssh -A ec2-user@$(terraform output bastion-public_ip) ssh node3.openshift.local
 
 * keep the terraform state clean.
 terraform validate && terraform plan && terraform apply -auto-approve
