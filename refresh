@@ -1,0 +1,18 @@
+#!/bin/bash
+
+STATE=$1
+NODE=$2
+
+if [ "${1}" = "on" ] ; then
+	sed -i.bak 's/prevent_destroy = true/prevent_destroy = false/g'  modules/openshift/06-nodes.tf
+	terraform refresh
+	terraform state show module.openshift.aws_instance.${NODE:=master}
+	echo "copy change from 'state show' to update code in modules."
+	echo "show change in ${NODE:=master}"
+fi
+
+if [ "${1}" = "off" ] ; then
+	terraform refresh
+	sed -i.bak 's/prevent_destroy = false/prevent_destroy = true/g'  modules/openshift/06-nodes.tf
+	terraform plan 
+fi

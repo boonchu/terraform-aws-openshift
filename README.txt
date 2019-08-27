@@ -66,3 +66,9 @@ registry-storage   Bound     pvc-65f934cf-b359-11e9-8849-026f8b0bbf30   20Gi    
 oc set volume deploymentconfigs/docker-registry --add \
    --name=registry-storage -t pvc \
    --claim-name=registry-storage --overwrite
+
+#### -- fix secured shell. --
+./fix_ssh
+
+#### -- sync terraform state --
+./refresh (on|off)

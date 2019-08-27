@@ -1,21 +1,26 @@
+Option 1:
+./refresh on   : turn on terraform update.
+./refresh off  : turn off terraform update.
+
+Option 2:
 # pull state output to temporary file.
 terraform state pull > /tmp/manual-import.tfstate
 
 # for instance, use node2 to run terraform change.
 # update 'life cycle'.
 # https://www.hashicorp.com/blog/zero-downtime-updates-with-terraform
-
+# switch on/off from boolean value.
   lifecycle {
     prevent_destroy = true
   }
 
-# refresh
+# refresh when changes in code applied.
 terraform refresh
-
 # capture changes from current state.
 terraform state show module.openshift.aws_instance.node2
-
-# run 'plan' for specific module.
+# * copy change from 'state show' to update code in modules.
+# * run 'terraform refresh'
+# * run 'plan' for specific module.
 terraform plan -target=module.openshift.aws_instance.node2
 
 
